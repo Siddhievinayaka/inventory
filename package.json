@@ -4,10 +4,9 @@
   "description": "MERN stack mobile-first inventory entry portal for antique/decor stores",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "cd client && npm run dev",
+    "build": "cd client && npm install --legacy-peer-deps && npm run build",
+    "start": "cd client && npm start"
   },
   "dependencies": {
     "react": "^18.3.1",
