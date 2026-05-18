@@ -2,7 +2,6 @@ services:
   - type: web
     name: inventory-entry-portal
     runtime: node
-    rootDir: client
     buildCommand: npm install --legacy-peer-deps && npm run build
     startCommand: npm start
     envVars:
