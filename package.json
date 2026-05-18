@@ -1,10 +1,5 @@
 {
   "name": "inventory-entry-portal-root",
   "version": "1.0.0",
-  "private": true,
-  "scripts": {
-    "dev": "cd client && npm run dev",
-    "build": "cd client && npm install --legacy-peer-deps && npm run build",
-    "start": "cd client && npm start"
-  }
+  "private": true
 }
