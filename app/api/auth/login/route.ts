@@ -7,6 +7,11 @@ export async function POST(req: NextRequest) {
     const adminEmail = process.env.ADMIN_EMAIL || 'admin@store.com';
     const adminPassword = process.env.ADMIN_PASSWORD || 'password123';
 
+    console.log('ENV EMAIL:', process.env.ADMIN_EMAIL);
+    console.log('ENV PASS:', process.env.ADMIN_PASSWORD);
+    console.log('INPUT EMAIL:', email);
+    console.log('INPUT PASS:', password);
+
     if (email === adminEmail && password === adminPassword) {
       const token = createToken({ email, role: 'admin' });
       return NextResponse.json({ token });
