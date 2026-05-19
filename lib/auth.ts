@@ -15,7 +15,11 @@ export function useAuth() {
   }, []);
 
   const login = (token: string) => {
-    Cookies.set('auth_token', token, { expires: 30 });
+    Cookies.set('auth_token', token, {
+      expires: 30,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+    });
     setIsAuthenticated(true);
   };
 
