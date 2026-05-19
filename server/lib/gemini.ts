@@ -5,42 +5,49 @@ const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY!,
 });
 
-const VISION_MODEL = 'openai/gpt-4o-mini';
-const TEXT_MODEL = 'openai/gpt-4o-mini';
+const VISION_MODEL = 'google/gemini-2.0-flash-lite-001';
+const TEXT_MODEL = 'google/gemini-2.0-flash-lite-001';
 
-export async function analyzeProductImage(imageUrl: string) {
-  const prompt = `Analyze this uploaded product image carefully. This is a product from an Indian handicraft, antique, religious idol, ethnic clothing, or home decor store.
+export async function analyzeProductImage(imageUrl: string, context?: {
+  title?: string; category?: string; subcategory?: string;
+  productType?: string; material?: string; style?: string; occasion?: string;
+}) {
+  const ctx = context || {};
+  const contextBlock = [
+    ctx.title && `Product Title: ${ctx.title}`,
+    ctx.category && `Category: ${ctx.category}`,
+    ctx.subcategory && `Subcategory: ${ctx.subcategory}`,
+    ctx.productType && `Product Type: ${ctx.productType}`,
+    ctx.material && `Material: ${ctx.material}`,
+    ctx.style && `Style: ${ctx.style}`,
+    ctx.occasion && `Occasion: ${ctx.occasion}`,
+  ].filter(Boolean).join('\n');
 
-Identify from the IMAGE ONLY:
-- actual product type (idol, statue, clothing, decor, etc.)
-- deity/object/person/item visible
-- material (brass, bronze, wood, fabric, resin, etc.)
-- category (Religious, Home Decor, Clothing, Artefacts, etc.)
-- style (antique, traditional, modern, rustic, etc.)
-- craftsmanship type
+  const prompt = `You are a product copywriter for a premium Indian handicraft, antique, and ethnic store.
 
-Then generate:
-- accurate ecommerce product title based on what you SEE
-- category suggestion
-- tags
-- concise product description
+The user has already filled in the following product details — treat these as FACTS, do not change or contradict them:
+${contextBlock || '(no additional context provided)'}
 
-IMPORTANT: Do NOT blindly trust any provided title. Prioritize visual analysis from the image. If uncertain, provide best possible identification.
+Analyze the product image carefully and write:
+1. A compelling 2-3 sentence full description highlighting craftsmanship, material, cultural/spiritual significance, and decor value.
+2. A 1-sentence short description (max 120 chars).
+
+Rules:
+- Use the provided title and category as ground truth
+- Do NOT suggest a different product name or category
+- Sound premium and authentic
+- Avoid hallucinations or invented history
 
 Return ONLY valid JSON:
 {
-  "suggestedTitle": "",
-  "suggestedCategory": "",
-  "suggestedMaterial": "",
-  "suggestedStyle": "",
-  "suggestedTags": [],
   "description": "",
-  "confidence": 0.0
+  "shortDescription": ""
 }`;
 
   try {
     const res = await client.chat.completions.create({
       model: VISION_MODEL,
+      max_tokens: 1024,
       messages: [{
         role: 'user',
         content: [
@@ -49,10 +56,12 @@ Return ONLY valid JSON:
         ],
       }],
     });
-    const text = res.choices[0].message.content?.replace(/```json|```/g, '').trim() || '{}';
+    const raw = res.choices[0].message.content || '{}';
+    const text = raw.replace(/```json|```/g, '').trim();
     return JSON.parse(text);
-  } catch {
-    return {};
+  } catch (e: any) {
+    console.error('[analyzeProductImage Error]', e?.message || e);
+    throw e;
   }
 }
 
@@ -76,9 +85,10 @@ export async function generateDescription(product: { title: string; category?: s
       if (visionResult.suggestedTitle || visionResult.description) {
         visualContext = `Visual Analysis Result:
 - Identified Product: ${visionResult.suggestedTitle || ''}
-- Material: ${visionResult.suggestedMaterial || ''}
-- Style: ${visionResult.suggestedStyle || ''}
-- Category: ${visionResult.suggestedCategory || ''}`;
+- Material: ${visionResult.material || visionResult.suggestedMaterial || ''}
+- Style: ${visionResult.style || visionResult.suggestedStyle || ''}
+- Category: ${visionResult.category || visionResult.suggestedCategory || ''}
+- Short Description: ${visionResult.shortDescription || ''}`;
       }
     } catch {
       // fallback to text-only if vision fails
@@ -112,12 +122,12 @@ Return plain text only.`,
   });
 
   try {
-    const res = await client.chat.completions.create({ model: VISION_MODEL, messages });
+    const res = await client.chat.completions.create({ model: VISION_MODEL, max_tokens: 512, messages });
     return res.choices[0].message.content?.trim() || '';
   } catch {
-    // Final fallback: text-only
     const res = await client.chat.completions.create({
       model: TEXT_MODEL,
+      max_tokens: 512,
       messages: [{ role: 'user', content: `Write a 2-3 sentence product description for: ${product.title || 'Indian handicraft product'}. Return plain text only.` }],
     });
     return res.choices[0].message.content?.trim() || '';
@@ -127,6 +137,7 @@ Return plain text only.`,
 export async function generateShortDescription(product: { title: string; category?: string; material?: string }) {
   const res = await client.chat.completions.create({
     model: TEXT_MODEL,
+    max_tokens: 256,
     messages: [{
       role: 'user',
       content: `Write a 1-sentence short description (max 120 chars) for this product:
@@ -140,6 +151,7 @@ Return plain text only.`,
 export async function generateTags(product: { title: string; description?: string; category?: string; material?: string; occasion?: string }) {
   const res = await client.chat.completions.create({
     model: TEXT_MODEL,
+    max_tokens: 256,
     messages: [{
       role: 'user',
       content: `Generate 8-10 SEO-optimized product tags for this Indian handicraft/ethnic store product.
@@ -160,6 +172,7 @@ Rules:
 export async function generateSEO(product: { title: string; description?: string; category?: string; tags?: string[] }) {
   const res = await client.chat.completions.create({
     model: TEXT_MODEL,
+    max_tokens: 512,
     messages: [{
       role: 'user',
       content: `Generate SEO metadata for this product listing.
@@ -182,6 +195,7 @@ Return JSON only:
 export async function generateFeatures(product: { title: string; category?: string; material?: string; description?: string }) {
   const res = await client.chat.completions.create({
     model: TEXT_MODEL,
+    max_tokens: 256,
     messages: [{
       role: 'user',
       content: `Generate 4-6 key product features/highlights for this product.

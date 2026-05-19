@@ -1,28 +1,33 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { generateDescription, analyzeProductImage } from '@/server/lib/gemini';
+import { analyzeProductImage } from '@/server/lib/gemini';
 
 export async function POST(req: NextRequest) {
   try {
     const product = await req.json();
 
-    // Run vision analysis and description generation in parallel
-    const [description, visionResult] = await Promise.all([
-      generateDescription(product),
-      product.images?.length ? analyzeProductImage(product.images[0]).catch(() => ({})) : Promise.resolve({}),
-    ]);
+    if (!product.images?.length) {
+      return NextResponse.json(
+        { error: 'Upload at least one image first' },
+        { status: 400 }
+      );
+    }
+
+    const result = await analyzeProductImage(product.images[0], {
+      title: product.title,
+      category: product.category,
+      subcategory: product.subcategory,
+      productType: product.productType,
+      material: product.material,
+      style: product.style,
+      occasion: product.occasion,
+    });
 
     return NextResponse.json({
-      description,
-      suggestions: {
-        title: visionResult.suggestedTitle || '',
-        category: visionResult.suggestedCategory || '',
-        material: visionResult.suggestedMaterial || '',
-        style: visionResult.suggestedStyle || '',
-        tags: visionResult.suggestedTags || [],
-        confidence: visionResult.confidence || null,
-      },
+      description: result.description || '',
+      shortDescription: result.shortDescription || '',
     });
   } catch (e: any) {
+    console.error('[AI Description Error]', e?.message || e);
     return NextResponse.json({ error: e?.message || 'Generation failed' }, { status: 500 });
   }
 }

@@ -229,38 +229,17 @@ export function ProductForm({ initialData, mode = 'create' }: Props) {
   });
 
   const genDescription = async () => {
-    if (!form.title && !form.images.length) return toast.error('Add a title or upload an image first');
+    if (!form.images.length) return toast.error('Upload at least one image first');
     setAi('desc');
     try {
       const res = await apiAI.generateDescription(aiContext());
       const data = res.data;
-
-      // Handle both old plain-string response and new structured response
-      if (typeof data === 'string') {
-        set('description', data);
-      } else {
-        if (data.description) set('description', data.description);
-
-        // Apply vision suggestions if confidence is reasonable
-        const s = data.suggestions;
-        if (s) {
-          if (s.title) set('title', s.title);
-          if (s.category) set('category', s.category);
-          if (s.material) set('material', s.material);
-          if (s.style) set('style', s.style);
-          if (s.tags?.length) set('tags', s.tags);
-
-          const hasSuggestions = s.title || s.category || s.material;
-          if (hasSuggestions) {
-            toast.success(`AI identified: ${s.title || 'product'} · Fields updated`);
-          } else {
-            toast.success('Description generated');
-          }
-        } else {
-          toast.success('Description generated');
-        }
-      }
-    } catch { toast.error('AI failed'); } finally { setAi(null); }
+      if (data.description) set('description', data.description);
+      if (data.shortDescription) set('shortDescription', data.shortDescription);
+      toast.success('Description generated');
+    } catch (e: any) {
+      toast.error(e?.response?.data?.error || e?.message || 'AI failed');
+    } finally { setAi(null); }
   };
 
   const genTags = async () => {
