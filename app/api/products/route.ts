@@ -3,32 +3,40 @@ import { connectDB } from '@/server/lib/db';
 import Product from '@/server/models/Product';
 import { verifyToken } from '@/server/lib/jwt';
 
-function getToken(req: NextRequest) {
-  return req.headers.get('authorization')?.split(' ')[1];
+function auth(req: NextRequest) {
+  const token = req.headers.get('authorization')?.split(' ')[1];
+  return token && verifyToken(token);
 }
 
 export async function GET(req: NextRequest) {
-  const token = getToken(req);
-  if (!token || !verifyToken(token)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-
+  if (!auth(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   await connectDB();
+
   const { searchParams } = req.nextUrl;
   const query: any = {};
   const search = searchParams.get('search');
   const category = searchParams.get('category');
   const status = searchParams.get('status');
-  if (search) query.title = { $regex: search, $options: 'i' };
+  const page = parseInt(searchParams.get('page') || '1');
+  const limit = parseInt(searchParams.get('limit') || '20');
+
+  if (search) query.$or = [
+    { title: { $regex: search, $options: 'i' } },
+    { sku: { $regex: search, $options: 'i' } },
+  ];
   if (category) query.category = category;
   if (status) query.status = status;
 
-  const products = await Product.find(query).sort({ createdAt: -1 });
-  return NextResponse.json(products);
+  const [products, total] = await Promise.all([
+    Product.find(query).sort({ createdAt: -1 }).skip((page - 1) * limit).limit(limit),
+    Product.countDocuments(query),
+  ]);
+
+  return NextResponse.json({ products, total, page, pages: Math.ceil(total / limit) });
 }
 
 export async function POST(req: NextRequest) {
-  const token = getToken(req);
-  if (!token || !verifyToken(token)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-
+  if (!auth(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   await connectDB();
   const data = await req.json();
   const product = await Product.create(data);

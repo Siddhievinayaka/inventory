@@ -13,7 +13,10 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    apiProducts.list().then((r) => setProducts(r.data)).catch(() => {}).finally(() => setLoading(false));
+    apiProducts.list().then((r) => {
+      const data = r.data;
+      setProducts(Array.isArray(data) ? data : data.products || []);
+    }).catch(() => {}).finally(() => setLoading(false));
   }, []);
 
   const stats = {
@@ -28,7 +31,7 @@ export default function DashboardPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-bold text-gray-900">Dashboard</h1>
-          <Link href="/add-product" className="flex items-center gap-2 px-4 py-2 bg-brand-600 text-white rounded-lg text-sm font-medium hover:bg-brand-700 transition-colors">
+          <Link href="/products/add" className="flex items-center gap-2 px-4 py-2 bg-brand-600 text-white rounded-lg text-sm font-medium hover:bg-brand-700 transition-colors">
             <PlusCircle size={16} /> Add Product
           </Link>
         </div>
@@ -58,17 +61,21 @@ export default function DashboardPage() {
             <div className="text-center py-10 text-gray-400">
               <Package size={40} className="mx-auto mb-2 opacity-40" />
               <p className="text-sm">No products yet</p>
-              <Link href="/add-product" className="text-brand-600 text-sm font-medium mt-2 inline-block">Add your first product →</Link>
+              <Link href="/products/add" className="text-brand-600 text-sm font-medium mt-2 inline-block">Add your first product →</Link>
             </div>
           ) : (
             <div className="divide-y divide-gray-100">
               {products.slice(0, 8).map((p) => (
                 <Link key={p._id} href={`/products/${p._id}`} className="flex items-center gap-3 py-3 hover:bg-gray-50 -mx-6 px-6 transition-colors">
-                  {p.images?.[0] ? (
-                    <img src={p.images[0]} alt="" className="w-10 h-10 rounded-lg object-cover border border-gray-200 flex-shrink-0" />
-                  ) : (
-                    <div className="w-10 h-10 rounded-lg bg-gray-100 flex-shrink-0" />
-                  )}
+                  {(() => {
+                    const img = p.images?.[0];
+                    const url = typeof img === 'string' ? img : img?.url;
+                    return url ? (
+                      <img src={url} alt="" className="w-10 h-10 rounded-lg object-cover border border-gray-200 flex-shrink-0" />
+                    ) : (
+                      <div className="w-10 h-10 rounded-lg bg-gray-100 flex-shrink-0" />
+                    );
+                  })()}
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-gray-900 truncate">{p.title}</p>
                     <p className="text-xs text-gray-400">{p.sku} · {formatDate(p.createdAt)}</p>

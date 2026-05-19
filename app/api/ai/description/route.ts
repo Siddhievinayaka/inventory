@@ -1,18 +1,28 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { generateDescription } from '@/server/lib/gemini';
+import { generateDescription, analyzeProductImage } from '@/server/lib/gemini';
 
 export async function POST(req: NextRequest) {
   try {
-    console.log('Description API called');
     const product = await req.json();
-    console.log('Product data:', product);
-    
-    const description = await generateDescription(product);
-    console.log('Generated description:', description);
-    
-    return NextResponse.json(description);
+
+    // Run vision analysis and description generation in parallel
+    const [description, visionResult] = await Promise.all([
+      generateDescription(product),
+      product.images?.length ? analyzeProductImage(product.images[0]).catch(() => ({})) : Promise.resolve({}),
+    ]);
+
+    return NextResponse.json({
+      description,
+      suggestions: {
+        title: visionResult.suggestedTitle || '',
+        category: visionResult.suggestedCategory || '',
+        material: visionResult.suggestedMaterial || '',
+        style: visionResult.suggestedStyle || '',
+        tags: visionResult.suggestedTags || [],
+        confidence: visionResult.confidence || null,
+      },
+    });
   } catch (e: any) {
-    console.error('Description error:', e);
     return NextResponse.json({ error: e?.message || 'Generation failed' }, { status: 500 });
   }
 }

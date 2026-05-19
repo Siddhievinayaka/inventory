@@ -6,13 +6,13 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export async function uploadImage(buffer: Buffer, filename: string): Promise<string> {
+export async function uploadImage(buffer: Buffer, filename: string): Promise<{ url: string; publicId: string }> {
   return new Promise((resolve, reject) => {
     const stream = cloudinary.uploader.upload_stream(
       { folder: 'inventory-portal', public_id: filename, resource_type: 'auto' },
       (error, result) => {
         if (error || !result) return reject(error);
-        resolve(result.secure_url);
+        resolve({ url: result.secure_url, publicId: result.public_id });
       }
     );
     stream.end(buffer);

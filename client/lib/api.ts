@@ -22,10 +22,18 @@ export const apiProducts = {
   delete: (id: string) => api.delete(`/api/products/${id}`),
 };
 
+export const apiMaster = {
+  list: (collection: string, search = '') =>
+    api.get(`/api/master/${collection}`, { params: search ? { search } : {} }),
+  create: (collection: string, name: string) =>
+    api.post(`/api/master/${collection}`, { name }),
+};
+
 export const apiAI = {
   analyze: (imageUrl: string) => api.post('/api/ai/analyze', { imageUrl }),
   generateDescription: (product: object) => api.post('/api/ai/description', product),
   generateTags: (product: object) => api.post('/api/ai/tags', product),
+  generateSEO: (product: object) => api.post('/api/ai/seo', product),
 };
 
 export default api;

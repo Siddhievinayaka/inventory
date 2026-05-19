@@ -5,10 +5,9 @@ export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
     const files = formData.getAll('files') as File[];
-
     if (!files.length) return NextResponse.json({ error: 'No files' }, { status: 400 });
 
-    const urls = await Promise.all(
+    const results = await Promise.all(
       files.map(async (file) => {
         const buffer = Buffer.from(await file.arrayBuffer());
         const name = `${Date.now()}-${file.name.replace(/\s/g, '_')}`;
@@ -16,9 +15,11 @@ export async function POST(req: NextRequest) {
       })
     );
 
-    return NextResponse.json({ urls });
+    return NextResponse.json({
+      urls: results.map((r) => r.url),
+      publicIds: results.map((r) => r.publicId),
+    });
   } catch (error) {
-    console.error('Upload error:', error);
     return NextResponse.json({ error: 'Upload failed' }, { status: 500 });
   }
 }
