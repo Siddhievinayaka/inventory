@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/Button';
 import { apiProducts } from '@/lib/api';
 import { formatCurrency, formatDate } from '@/lib/utils';
 import { ArrowLeft, Trash2, Edit, Package } from 'lucide-react';
+import { StockBadge } from '@/components/ui/StockBadge';
 
 function Field({ label, value }: { label: string; value?: any }) {
   if (!value && value !== 0) return null;
@@ -172,7 +173,11 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
           {/* Inventory */}
           <Section title="Inventory">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <Field label="Stock Status" value={product.stockStatus} />
+              <div>
+                <p className="text-xs text-gray-400 mb-1.5">Stock Status</p>
+                <StockBadge productId={product._id} status={product.stockStatus || 'Out of Stock'}
+                  onUpdate={(s) => setProduct((p: any) => ({ ...p, stockStatus: s }))} />
+              </div>
               <Field label="Quantity" value={product.quantity} />
               <Field label="Low Stock Alert" value={product.lowStockThreshold} />
               <Field label="Availability" value={product.availabilityType} />

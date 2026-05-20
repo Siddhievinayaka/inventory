@@ -20,6 +20,9 @@ export const apiProducts = {
   create: (data: object) => api.post('/api/products', data),
   update: (id: string, data: object) => api.put(`/api/products/${id}`, data),
   delete: (id: string) => api.delete(`/api/products/${id}`),
+  duplicate: (id: string) => api.post(`/api/products/${id}`),
+  bulk: (action: string, ids: string[], payload?: object) =>
+    api.post('/api/products/bulk', { action, ids, payload }),
 };
 
 export const apiMaster = {

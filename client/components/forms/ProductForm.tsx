@@ -203,15 +203,14 @@ export function ProductForm({ initialData, mode = 'create' }: Props) {
       // Auto-generate slug from title
       if (field === 'title') next.slug = slugify(value);
 
-      // Pricing logic
-      if (field === 'mrp' || field === 'discountPercentage') {
-        const mrp = parseFloat(field === 'mrp' ? value : next.mrp) || 0;
+      // Pricing: Selling Price + Shipping = Final Price. MRP = Final Price / (1 - disc%)
+      if (['sellingPrice', 'shippingCharge', 'discountPercentage'].includes(field)) {
+        const sp = parseFloat(field === 'sellingPrice' ? value : next.sellingPrice) || 0;
+        const shipping = parseFloat(field === 'shippingCharge' ? value : next.shippingCharge) || 0;
         const disc = parseFloat(field === 'discountPercentage' ? value : next.discountPercentage) || 0;
-        next.sellingPrice = (mrp - (mrp * disc) / 100).toFixed(2);
-        next.finalPrice = (parseFloat(next.sellingPrice) + (parseFloat(next.shippingCharge) || 0)).toFixed(2);
-      }
-      if (field === 'shippingCharge' || field === 'sellingPrice') {
-        next.finalPrice = ((parseFloat(next.sellingPrice) || 0) + (parseFloat(field === 'shippingCharge' ? value : next.shippingCharge) || 0)).toFixed(2);
+        const fp = sp + shipping;
+        next.finalPrice = fp.toFixed(2);
+        next.mrp = disc < 100 ? (fp / (1 - disc / 100)).toFixed(2) : fp.toFixed(2);
       }
 
       return next;
@@ -300,6 +299,10 @@ export function ProductForm({ initialData, mode = 'create' }: Props) {
     <div className="space-y-3 pb-24">
 
       {/* ── 1. Basic Information ── */}
+      <Section title="Media Upload" defaultOpen>
+        <ImageUpload onUpload={handleImages} existingImages={form.images} maxFiles={10} />
+      </Section>
+
       <Section title="Basic Information" defaultOpen>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="sm:col-span-2">
@@ -354,29 +357,29 @@ export function ProductForm({ initialData, mode = 'create' }: Props) {
       <Section title="Pricing & Discounts">
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
           <div>
-            <label className={labelCls}>MRP (₹)</label>
-            <input type="number" value={form.mrp} onChange={(e) => set('mrp', e.target.value)} className={inputCls} placeholder="0" min="0" />
-          </div>
-          <div>
-            <label className={labelCls}>Discount %</label>
-            <input type="number" value={form.discountPercentage} onChange={(e) => set('discountPercentage', e.target.value)} className={inputCls} placeholder="35" min="0" max="100" />
-          </div>
-          <div>
-            <label className={labelCls}>Selling Price (₹)</label>
-            <input type="number" value={form.sellingPrice} onChange={(e) => set('sellingPrice', e.target.value)} className={cn(inputCls, 'bg-green-50 font-semibold text-green-800')} />
+            <label className={labelCls}>Selling Price (₹) *</label>
+            <input type="number" value={form.sellingPrice} onChange={(e) => set('sellingPrice', e.target.value)} className={cn(inputCls, 'bg-green-50 font-semibold text-green-800')} placeholder="e.g. 650" min="0" />
           </div>
           <div>
             <label className={labelCls}>Shipping Charge (₹)</label>
             <input type="number" value={form.shippingCharge} onChange={(e) => set('shippingCharge', e.target.value)} className={inputCls} placeholder="0" min="0" />
           </div>
           <div>
-            <label className={labelCls}>Final Price (₹)</label>
+            <label className={labelCls}>Discount %</label>
+            <input type="number" value={form.discountPercentage} onChange={(e) => set('discountPercentage', e.target.value)} className={inputCls} placeholder="35" min="0" max="100" />
+          </div>
+          <div>
+            <label className={labelCls}>Final Price (₹) <span className="text-gray-400 font-normal text-xs">auto</span></label>
             <input type="number" value={form.finalPrice} disabled className={cn(inputCls, 'bg-gray-50 text-gray-500 font-semibold')} />
           </div>
+          <div>
+            <label className={labelCls}>MRP (₹) <span className="text-gray-400 font-normal text-xs">auto</span></label>
+            <input type="number" value={form.mrp} disabled className={cn(inputCls, 'bg-gray-50 text-gray-500 font-semibold')} />
+          </div>
         </div>
-        {form.mrp && form.sellingPrice && (
+        {form.finalPrice && form.mrp && parseFloat(form.mrp) > parseFloat(form.finalPrice) && (
           <p className="text-xs text-green-700 bg-green-50 px-3 py-2 rounded-lg">
-            Customer saves ₹{(parseFloat(form.mrp) - parseFloat(form.sellingPrice)).toFixed(2)} ({form.discountPercentage}% off)
+            MRP ₹{parseFloat(form.mrp).toFixed(2)} · Customer saves ₹{(parseFloat(form.mrp) - parseFloat(form.finalPrice)).toFixed(2)} ({form.discountPercentage}% off)
           </p>
         )}
       </Section>
@@ -441,15 +444,6 @@ export function ProductForm({ initialData, mode = 'create' }: Props) {
             className="w-4 h-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500" />
           <span className="text-sm text-gray-700">Returns available</span>
         </label>
-      </Section>
-
-      {/* ── 10. Media ── */}
-      <Section title="Media Upload" defaultOpen>
-        <ImageUpload
-          onUpload={handleImages}
-          existingImages={form.images}
-          maxFiles={10}
-        />
       </Section>
 
       {/* ── 11. SEO & AI Metadata ── */}

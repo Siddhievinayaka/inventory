@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { X, ChevronDown, Plus, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { apiMaster } from '@/lib/api';
@@ -29,12 +30,25 @@ function useDebounce(value: string, delay = 300) {
   return debounced;
 }
 
-export function CreatableSelect({ collection, value, onChange, placeholder = 'Search or create...', multi = false, label, required }: Props) {
+interface DropdownPos {
+  top?: number;
+  bottom?: number;
+  left: number;
+  width: number;
+}
+
+export function CreatableSelect({
+  collection, value, onChange,
+  placeholder = 'Search or create...',
+  multi = false, label, required,
+}: Props) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [options, setOptions] = useState<SelectOption[]>([]);
   const [loading, setLoading] = useState(false);
   const [creating, setCreating] = useState(false);
+  const [pos, setPos] = useState<DropdownPos>({ top: 0, left: 0, width: 0 });
+
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const debouncedSearch = useDebounce(search);
@@ -42,6 +56,45 @@ export function CreatableSelect({ collection, value, onChange, placeholder = 'Se
   const selected = multi
     ? (Array.isArray(value) ? value : [])
     : (typeof value === 'string' ? value : '');
+
+  // Calculate fixed position from anchor element
+  const calcPos = useCallback(() => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const menuHeight = 220;
+    if (spaceBelow < menuHeight && rect.top > menuHeight) {
+      setPos({ bottom: window.innerHeight - rect.top + 2, left: rect.left, width: rect.width });
+    } else {
+      setPos({ top: rect.bottom + 2, left: rect.left, width: rect.width });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (open) calcPos();
+  }, [open, calcPos]);
+
+  // Reposition on scroll/resize
+  useEffect(() => {
+    if (!open) return;
+    window.addEventListener('scroll', calcPos, true);
+    window.addEventListener('resize', calcPos);
+    return () => {
+      window.removeEventListener('scroll', calcPos, true);
+      window.removeEventListener('resize', calcPos);
+    };
+  }, [open, calcPos]);
+
+  // Close on outside click
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: MouseEvent) => {
+      const target = e.target as Node;
+      if (!containerRef.current?.contains(target)) setOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [open]);
 
   const fetchOptions = useCallback(async (q: string) => {
     setLoading(true);
@@ -58,14 +111,6 @@ export function CreatableSelect({ collection, value, onChange, placeholder = 'Se
   useEffect(() => {
     if (open) fetchOptions(debouncedSearch);
   }, [open, debouncedSearch, fetchOptions]);
-
-  useEffect(() => {
-    function handleClick(e: MouseEvent) {
-      if (!containerRef.current?.contains(e.target as Node)) setOpen(false);
-    }
-    document.addEventListener('mousedown', handleClick);
-    return () => document.removeEventListener('mousedown', handleClick);
-  }, []);
 
   const handleCreate = async () => {
     if (!search.trim()) return;
@@ -85,11 +130,7 @@ export function CreatableSelect({ collection, value, onChange, placeholder = 'Se
   const handleSelect = (val: string) => {
     if (multi) {
       const arr = Array.isArray(selected) ? selected : [];
-      if (arr.includes(val)) {
-        onChange(arr.filter((v) => v !== val));
-      } else {
-        onChange([...arr, val]);
-      }
+      onChange(arr.includes(val) ? arr.filter((v) => v !== val) : [...arr, val]);
     } else {
       onChange(val === selected ? '' : val);
       setOpen(false);
@@ -98,21 +139,80 @@ export function CreatableSelect({ collection, value, onChange, placeholder = 'Se
   };
 
   const removeChip = (val: string) => {
-    if (multi && Array.isArray(selected)) {
-      onChange(selected.filter((v) => v !== val));
-    }
+    if (multi && Array.isArray(selected)) onChange(selected.filter((v) => v !== val));
   };
 
   const filtered = options.filter((o) =>
     o.label.toLowerCase().includes(search.toLowerCase())
   );
 
-  const showCreate = search.trim() && !options.some((o) => o.label.toLowerCase() === search.toLowerCase().trim());
+  const showCreate = search.trim() &&
+    !options.some((o) => o.label.toLowerCase() === search.toLowerCase().trim());
 
   const displayValue = !multi && typeof selected === 'string' ? selected : '';
 
+  const dropdownMenu = open && typeof document !== 'undefined'
+    ? createPortal(
+        <div
+          style={{
+            position: 'fixed',
+            top: pos.top,
+            bottom: pos.bottom,
+            left: pos.left,
+            width: pos.width,
+            zIndex: 99999,
+          }}
+          className="bg-white border border-gray-200 rounded-lg shadow-xl"
+          onMouseDown={(e) => e.preventDefault()}
+        >
+          <div className="max-h-52 overflow-y-auto">
+            {loading && (
+              <div className="flex items-center justify-center gap-2 px-3 py-3 text-sm text-gray-400">
+                <Loader2 size={14} className="animate-spin" /> Loading...
+              </div>
+            )}
+            {!loading && filtered.length === 0 && !showCreate && (
+              <p className="text-sm text-gray-400 px-3 py-3 text-center">No results</p>
+            )}
+            {!loading && filtered.map((opt) => {
+              const isSelected = multi
+                ? Array.isArray(selected) && selected.includes(opt.value)
+                : selected === opt.value;
+              return (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => handleSelect(opt.value)}
+                  className={cn(
+                    'w-full text-left px-3 py-2.5 text-sm hover:bg-gray-50 flex items-center justify-between transition-colors',
+                    isSelected && 'bg-brand-50 text-brand-700 font-medium'
+                  )}
+                >
+                  {opt.label}
+                  {isSelected && <span className="text-brand-600 text-xs">✓</span>}
+                </button>
+              );
+            })}
+          </div>
+
+          {showCreate && (
+            <button
+              type="button"
+              onClick={handleCreate}
+              disabled={creating}
+              className="w-full flex items-center gap-2 px-3 py-2.5 text-sm text-brand-700 font-medium border-t border-gray-100 hover:bg-brand-50 transition-colors disabled:opacity-50"
+            >
+              {creating ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
+              Create "{search.trim()}"
+            </button>
+          )}
+        </div>,
+        document.body
+      )
+    : null;
+
   return (
-    <div className="w-full relative" ref={containerRef}>
+    <div className="w-full" ref={containerRef}>
       {label && (
         <label className="block text-sm font-medium text-gray-700 mb-1">
           {label}{required && <span className="text-red-500 ml-0.5">*</span>}
@@ -130,7 +230,11 @@ export function CreatableSelect({ collection, value, onChange, placeholder = 'Se
           {multi && Array.isArray(selected) && selected.map((v) => (
             <span key={v} className="inline-flex items-center gap-1 px-2 py-0.5 bg-brand-100 text-brand-800 rounded-md text-xs font-medium">
               {v}
-              <button type="button" onClick={(e) => { e.stopPropagation(); removeChip(v); }} className="hover:text-brand-900">
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); removeChip(v); }}
+                className="hover:text-brand-900"
+              >
                 <X size={10} />
               </button>
             </span>
@@ -146,61 +250,31 @@ export function CreatableSelect({ collection, value, onChange, placeholder = 'Se
             onChange={(e) => setSearch(e.target.value)}
             onFocus={() => setOpen(true)}
             onKeyDown={(e) => {
-              if (e.key === 'Enter') { e.preventDefault(); if (showCreate) handleCreate(); else if (filtered[0]) handleSelect(filtered[0].value); }
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                if (showCreate) handleCreate();
+                else if (filtered[0]) handleSelect(filtered[0].value);
+              }
               if (e.key === 'Escape') setOpen(false);
             }}
-            placeholder={(!multi && displayValue) || (multi && Array.isArray(selected) && selected.length > 0) ? '' : placeholder}
+            placeholder={
+              (!multi && displayValue) ||
+              (multi && Array.isArray(selected) && selected.length > 0)
+                ? '' : placeholder
+            }
             className="flex-1 min-w-[80px] outline-none text-sm bg-transparent py-0.5 px-1 placeholder:text-gray-400"
           />
 
           <div className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
-            {loading ? <Loader2 size={14} className="animate-spin" /> : <ChevronDown size={14} />}
+            {loading
+              ? <Loader2 size={14} className="animate-spin" />
+              : <ChevronDown size={14} />
+            }
           </div>
         </div>
       </div>
 
-      {open && (
-        <div className="absolute z-50 mt-1 w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-lg-soft overflow-hidden">
-          <div className="max-h-52 overflow-y-auto">
-            {filtered.length === 0 && !showCreate && !loading && (
-              <p className="text-sm text-gray-400 px-3 py-3 text-center">No results</p>
-            )}
-            {filtered.map((opt) => {
-              const isSelected = multi
-                ? Array.isArray(selected) && selected.includes(opt.value)
-                : selected === opt.value;
-              return (
-                <button
-                  key={opt.value}
-                  type="button"
-                  onMouseDown={(e) => e.preventDefault()}
-                  onClick={() => handleSelect(opt.value)}
-                  className={cn(
-                    'w-full text-left px-3 py-2.5 text-sm hover:bg-gray-50 flex items-center justify-between transition-colors',
-                    isSelected && 'bg-brand-50 text-brand-700 font-medium'
-                  )}
-                >
-                  {opt.label}
-                  {isSelected && <span className="text-brand-600 text-xs">✓</span>}
-                </button>
-              );
-            })}
-          </div>
-
-          {showCreate && (
-            <button
-              type="button"
-              onMouseDown={(e) => e.preventDefault()}
-              onClick={handleCreate}
-              disabled={creating}
-              className="w-full flex items-center gap-2 px-3 py-2.5 text-sm text-brand-700 font-medium border-t border-gray-100 hover:bg-brand-50 transition-colors"
-            >
-              {creating ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
-              Create "{search.trim()}"
-            </button>
-          )}
-        </div>
-      )}
+      {dropdownMenu}
     </div>
   );
 }

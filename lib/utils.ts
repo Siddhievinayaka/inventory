@@ -13,7 +13,7 @@ export function formatDate(date: Date | string) {
 export function generateSKU() {
   const ts = Date.now().toString(36).toUpperCase();
   const rand = Math.random().toString(36).substring(2, 6).toUpperCase();
-  return `SKU-${ts}-${rand}`;
+  return `RSV-${ts}-${rand}`;
 }
 
 export function slugify(str: string) {
