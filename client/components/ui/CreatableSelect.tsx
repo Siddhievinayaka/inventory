@@ -51,6 +51,7 @@ export function CreatableSelect({
 
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const debouncedSearch = useDebounce(search);
 
   const selected = multi
@@ -90,7 +91,10 @@ export function CreatableSelect({
     if (!open) return;
     const handler = (e: MouseEvent) => {
       const target = e.target as Node;
-      if (!containerRef.current?.contains(target)) setOpen(false);
+      if (
+        !containerRef.current?.contains(target) &&
+        !dropdownRef.current?.contains(target)
+      ) setOpen(false);
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
@@ -162,8 +166,8 @@ export function CreatableSelect({
             width: pos.width,
             zIndex: 99999,
           }}
+          ref={dropdownRef}
           className="bg-white border border-gray-200 rounded-lg shadow-xl"
-          onMouseDown={(e) => e.preventDefault()}
         >
           <div className="max-h-52 overflow-y-auto">
             {loading && (
