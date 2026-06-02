@@ -5,8 +5,8 @@ const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY!,
 });
 
-const VISION_MODEL = 'google/gemini-2.0-flash-lite-001';
-const TEXT_MODEL = 'google/gemini-2.0-flash-lite-001';
+const VISION_MODEL = 'google/gemini-2.5-flash-lite';
+const TEXT_MODEL = 'google/gemini-2.5-flash-lite';
 
 export async function analyzeProductImage(imageUrl: string, context?: {
   title?: string; category?: string; subcategory?: string;
