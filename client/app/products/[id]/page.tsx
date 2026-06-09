@@ -50,9 +50,15 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
     return p.images.map((img: any) => typeof img === 'string' ? img : img?.url).filter(Boolean);
   };
 
+  const getPrimaryIndex = (p: any): number => {
+    if (!p.images?.length) return 0;
+    const idx = p.images.findIndex((img: any) => img?.isPrimary);
+    return idx >= 0 ? idx : 0;
+  };
+
   useEffect(() => {
     apiProducts.get(params.id)
-      .then((r) => setProduct(r.data))
+      .then((r) => { setProduct(r.data); setActiveImg(getPrimaryIndex(r.data)); })
       .catch(() => toast.error('Product not found'))
       .finally(() => setLoading(false));
   }, [params.id]);

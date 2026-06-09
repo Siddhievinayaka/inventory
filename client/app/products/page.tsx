@@ -370,8 +370,11 @@ export default function ProductsPage() {
 
               <div className="divide-y divide-gray-100">
                 {products.map((p) => {
-                  const img = p.images?.[0];
-                  const primaryImg = typeof img === 'string' ? img : img?.url;
+                  const primaryImg = (() => {
+                    const imgs = p.images || [];
+                    const primary = imgs.find((i: any) => i?.isPrimary) || imgs[0];
+                    return typeof primary === 'string' ? primary : primary?.url;
+                  })();
                   const isSelected = selected.includes(p._id);
 
                   return (
