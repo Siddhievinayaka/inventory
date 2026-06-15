@@ -22,22 +22,27 @@ export async function POST(req: NextRequest) {
       files.map(async (file) => {
         const buffer = Buffer.from(await file.arrayBuffer());
         
-        // Optimize image to 1:1 aspect ratio white padded canvas and convert to WebP
-        const optimizedBuffer = await sharp(buffer)
-          .resize({
-            width: 800,
-            height: 800,
-            fit: 'contain',
-            background: { r: 255, g: 255, b: 255, alpha: 1 }
-          })
-          .webp({ quality: 82 })
-          .toBuffer();
+        let uploadBuffer = buffer;
+        try {
+          // Optimize image to 1:1 aspect ratio white padded canvas and convert to WebP
+          uploadBuffer = await sharp(buffer)
+            .resize({
+              width: 800,
+              height: 800,
+              fit: 'contain',
+              background: { r: 255, g: 255, b: 255, alpha: 1 }
+            })
+            .webp({ quality: 82 })
+            .toBuffer();
+        } catch (optimizeError) {
+          console.warn(`Sharp optimization failed for ${file.name}, uploading original buffer:`, optimizeError);
+        }
 
         const parsed = path.parse(file.name);
         const slugged = slugify(parsed.name);
         const name = `${Date.now()}-${slugged || 'image'}`;
 
-        return uploadImage(optimizedBuffer, name);
+        return uploadImage(uploadBuffer, name);
       })
     );
 

@@ -9,7 +9,7 @@ cloudinary.config({
 export async function uploadImage(buffer: Buffer, filename: string): Promise<{ url: string; publicId: string }> {
   return new Promise((resolve, reject) => {
     const stream = cloudinary.uploader.upload_stream(
-      { folder: 'inventory-portal', public_id: filename, resource_type: 'auto' },
+      { folder: 'inventory-portal', public_id: filename, resource_type: 'auto', format: 'webp' },
       (error, result) => {
         if (error || !result) return reject(error);
         resolve({ url: result.secure_url, publicId: result.public_id });
