@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
       files.map(async (file) => {
         const buffer = Buffer.from(await file.arrayBuffer());
         
-        let uploadBuffer = buffer;
+        let uploadBuffer: Buffer = buffer as Buffer;
         try {
           // Optimize image to 1:1 aspect ratio white padded canvas and convert to WebP
           uploadBuffer = await sharp(buffer)
