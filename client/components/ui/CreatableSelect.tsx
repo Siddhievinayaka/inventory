@@ -37,6 +37,33 @@ interface DropdownPos {
   width: number;
 }
 
+const splitBulkText = (text: string): string[] => {
+  // First, split by newlines
+  let lines = text.split(/\r?\n/);
+  
+  // If there's only one line, check if it contains multiple sentences (separated by periods)
+  if (lines.length === 1 && text.includes('.')) {
+    const sentences = text
+      .split(/\.\s+/)
+      .map((s) => s.trim())
+      .map((s) => (s.endsWith('.') ? s.slice(0, -1) : s))
+      .filter(Boolean);
+    
+    if (sentences.length > 1) {
+      return sentences;
+    }
+  }
+  
+  // Clean up each line: trim and remove bullets/numbers
+  return lines
+    .map((line) => {
+      let cleaned = line.trim();
+      cleaned = cleaned.replace(/^(?:\d+\.\s*|[-*•]\s*)/, '');
+      return cleaned.trim();
+    })
+    .filter(Boolean);
+};
+
 export function CreatableSelect({
   collection, value, onChange,
   placeholder = 'Search or create...',
@@ -139,6 +166,44 @@ export function CreatableSelect({
       onChange(val === selected ? '' : val);
       setOpen(false);
       setSearch('');
+    }
+  };
+
+  const handlePaste = async (e: React.ClipboardEvent<HTMLInputElement>) => {
+    const pastedText = e.clipboardData.getData('text');
+    const items = splitBulkText(pastedText);
+
+    if (items.length > 1) {
+      e.preventDefault();
+      setLoading(true);
+      try {
+        const createdItems = await Promise.all(
+          items.map(async (item) => {
+            try {
+              const res = await apiMaster.create(collection, item);
+              return res.data.name;
+            } catch {
+              return item;
+            }
+          })
+        );
+
+        if (multi) {
+          const arr = Array.isArray(selected) ? selected : [];
+          const updated = [...arr];
+          createdItems.forEach((val) => {
+            if (!updated.includes(val)) updated.push(val);
+          });
+          onChange(updated);
+        } else {
+          onChange(createdItems);
+        }
+      } catch (err) {
+        console.error('Bulk paste failed:', err);
+      } finally {
+        setLoading(false);
+        setSearch('');
+      }
     }
   };
 
@@ -253,6 +318,7 @@ export function CreatableSelect({
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             onFocus={() => setOpen(true)}
+            onPaste={handlePaste}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 e.preventDefault();

@@ -19,203 +19,238 @@ const MENU_DATA = [
   {
     id: 'home-decor', label: 'Home Decor', icon: '🏮', slug: 'home-decor',
     children: [
-      { id: 'wall-table-decor', label: 'Wall & Table', slug: 'wall-table-decor', children: [
-        { label: 'Wall Hangings', slug: 'wall-hangings' },
-        { label: 'Table Stand Frames', slug: 'table-stand-frames' },
-        { label: 'Table Clocks', slug: 'table-clocks' },
-        { label: 'Painting & Photos', slug: 'painting-photos' },
-      ]},
-      { id: 'decorative-accents', label: 'Decorative Accents', slug: 'decorative-accents', children: [
-        { label: 'Wind Chimes', slug: 'wind-chimes' },
-        { label: 'Showpiece Boxes', slug: 'showpiece-boxes' },
-        { label: 'Decorative Drawer', slug: 'decorative-drawer' },
-        { label: 'Artificial Birds', slug: 'artificial-birds' },
-      ]},
-      { id: 'showpieces-figurines', label: 'Showpieces & Figurines', slug: 'showpieces-figurines', children: [
-        { label: 'Artificial Showpieces', slug: 'artificial-showpieces' },
-        { label: 'Metal Showpieces', slug: 'metal-showpieces' },
-        { label: 'Wooden Showpieces', slug: 'wooden-showpieces' },
-        { label: 'Ceramic Showpieces', slug: 'ceramic-showpieces' },
-        { label: 'Other Decor', slug: 'other-decor' },
-      ]},
+      {
+        id: 'wall-table-decor', label: 'Wall & Table', slug: 'wall-table-decor', children: [
+          { label: 'Wall Hangings', slug: 'wall-hangings' },
+          { label: 'Table Stand Frames', slug: 'table-stand-frames' },
+          { label: 'Table Clocks', slug: 'table-clocks' },
+          { label: 'Painting & Photos', slug: 'painting-photos' },
+        ]
+      },
+      {
+        id: 'decorative-accents', label: 'Decorative Accents', slug: 'decorative-accents', children: [
+          { label: 'Wind Chimes', slug: 'wind-chimes' },
+          { label: 'Showpiece Boxes', slug: 'showpiece-boxes' },
+          { label: 'Decorative Drawer', slug: 'decorative-drawer' },
+          { label: 'Artificial Birds', slug: 'artificial-birds' },
+          { label: 'Artificial Animals', slug: 'artificial-animals' },
+        ]
+      },
+      {
+        id: 'showpieces-figurines', label: 'Showpieces & Figurines', slug: 'showpieces-figurines', children: [
+          { label: 'Artificial Showpieces', slug: 'artificial-showpieces' },
+          { label: 'Metal Showpieces', slug: 'metal-showpieces' },
+          { label: 'Wooden Showpieces', slug: 'wooden-showpieces' },
+          { label: 'Ceramic Showpieces', slug: 'ceramic-showpieces' },
+          { label: 'Other Decor', slug: 'other-decor' },
+        ]
+      },
     ],
   },
   {
     id: 'fashion', label: 'Fashion', icon: '👗', slug: 'fashion',
     children: [
-      { id: 'men-fashion', label: 'Men', slug: 'men-fashion', children: [
-        { label: 'Long Kurta', slug: 'long-kurta' },
-        { label: 'Short Kurta', slug: 'short-kurta' },
-        { label: 'Bagalbandi', slug: 'bagalbandi' },
-        { label: 'Shirt', slug: 'shirt' },
-        { label: 'Jacket', slug: 'jacket' },
-        { label: 'Dhoti & Chadara', slug: 'dhoti-chadara' },
-        { label: 'Linen Pants', slug: 'linen-pants' },
-      ]},
-      { id: 'women-fashion', label: 'Women', slug: 'women-fashion', children: [
-        { label: 'ISKCON Gopi Dress', slug: 'gopi-dress' },
-        { label: 'ISKCON Anarkali Dress', slug: 'anarkali-gopi-dress' },
-        { label: 'Long Kurti', slug: 'long-kurti' },
-        { label: 'Short Kurti', slug: 'short-kurti' },
-        { label: 'Kurti Set', slug: 'kurti-set' },
-        { label: 'Linen Pant', slug: 'women-linen-pant' },
-        { label: 'Co-Ord Set', slug: 'co-ord-set' },
-        { label: 'Lounge Set', slug: 'lounge-set' },
-        { label: 'Blouse', slug: 'blouse' },
-        { label: 'Under Skirts', slug: 'under-skirts' },
-        { label: 'Sarees', slug: 'sarees' },
-      ]},
-      { id: 'kids-fashion', label: 'Kids', slug: 'kids-fashion', children: [
-        { label: 'Gopi Dress', slug: 'kids-gopi-dress' },
-        { label: 'Anarkali Dress', slug: 'kids-anarkali-dress' },
-        { label: 'Frock', slug: 'frock' },
-        { label: 'Kurta', slug: 'kids-kurta' },
-        { label: 'Pajama', slug: 'pajama' },
-      ]},
+      {
+        id: 'men-fashion', label: 'Men', slug: 'men-fashion', children: [
+          { label: 'Long Kurta', slug: 'long-kurta' },
+          { label: 'Short Kurta', slug: 'short-kurta' },
+          { label: 'Bagalbandi', slug: 'bagalbandi' },
+          { label: 'Shirt', slug: 'shirt' },
+          { label: 'Jacket', slug: 'jacket' },
+          { label: 'Dhoti & Chadara', slug: 'dhoti-chadara' },
+          { label: 'Linen Pants', slug: 'linen-pants' },
+        ]
+      },
+      {
+        id: 'women-fashion', label: 'Women', slug: 'women-fashion', children: [
+          { label: 'ISKCON Gopi Dress', slug: 'gopi-dress' },
+          { label: 'ISKCON Anarkali Dress', slug: 'anarkali-gopi-dress' },
+          { label: 'Long Kurti', slug: 'long-kurti' },
+          { label: 'Short Kurti', slug: 'short-kurti' },
+          { label: 'Skirt', slug: 'skirt' },
+          { label: 'Kurti Set', slug: 'kurti-set' },
+          { label: 'Linen Pant', slug: 'women-linen-pant' },
+          { label: 'Co-Ord Set', slug: 'co-ord-set' },
+          { label: 'Lounge Set', slug: 'lounge-set' },
+          { label: 'Blouse', slug: 'blouse' },
+          { label: 'Under Skirts', slug: 'under-skirts' },
+          { label: 'Sarees', slug: 'sarees' },
+        ]
+      },
+      {
+        id: 'kids-fashion', label: 'Kids', slug: 'kids-fashion', children: [
+          { label: 'Gopi Dress', slug: 'kids-gopi-dress' },
+          { label: 'Anarkali Dress', slug: 'kids-anarkali-dress' },
+          { label: 'Frock', slug: 'frock' },
+          { label: 'Kurta', slug: 'kids-kurta' },
+          { label: 'Pajama', slug: 'pajama' },
+        ]
+      },
     ],
   },
   {
     id: 'fashion-accessories', label: 'Fashion Accessories', icon: '👜', slug: 'fashion-accessories',
     children: [
-      { id: 'bags-wraps', label: 'Bags & Wraps', slug: 'bags-wraps', children: [
-        { label: 'Tote Bags', slug: 'tote-bags' },
-        { label: 'Stoles', slug: 'stoles' },
-        { label: 'Scarfs', slug: 'scarfs' },
-        { label: 'Towels', slug: 'towels' },
-        { label: 'Harinam Chadar', slug: 'harinam-chadar' },
-        { label: 'Chadar', slug: 'chadar' },
-        { label: 'Shawl Dupatta', slug: 'shawl-dupatta' },
-      ]},
-      { id: 'jewellery-adornments', label: 'Jewellery & Adornments', slug: 'jewellery-adornments', children: [
-        { label: 'Earrings', slug: 'earrings' },
-        { label: 'Pendants', slug: 'pendants' },
-        { label: 'Conch Bangles', slug: 'conch-bangles' },
-        { label: 'Oxidized Bangles', slug: 'oxidized-bangles' },
-      ]},
+      {
+        id: 'bags-wraps', label: 'Bags & Wraps', slug: 'bags-wraps', children: [
+          { label: 'Tote Bags', slug: 'tote-bags' },
+          { label: 'Stoles', slug: 'stoles' },
+          { label: 'Scarfs', slug: 'scarfs' },
+          { label: 'Towels', slug: 'towels' },
+          { label: 'Harinam Chadar', slug: 'harinam-chadar' },
+          { label: 'Chadar', slug: 'chadar' },
+          { label: 'Shawl Dupatta', slug: 'shawl-dupatta' },
+        ]
+      },
+      {
+        id: 'jewellery-adornments', label: 'Jewellery & Adornments', slug: 'jewellery-adornments', children: [
+          { label: 'Earrings', slug: 'earrings' },
+          { label: 'Pendants', slug: 'pendants' },
+          { label: 'Conch Bangles', slug: 'conch-bangles' },
+          { label: 'Oxidized Bangles', slug: 'oxidized-bangles' },
+        ]
+      },
     ],
   },
   {
     id: 'puja-worship', label: 'Puja & Worship', icon: '🪔', slug: 'puja-worship',
     children: [
-      { id: 'god-idols', label: 'God Idols', slug: 'god-idols', children: [
-        { label: 'Radha Krishna', slug: 'radha-krishna' },
-        { label: 'Single Krishna', slug: 'single-krishna' },
-        { label: 'Narsingha Bhagawan', slug: 'narsingha-bhagawan' },
-        { label: 'Laxmi Narsingha Bhagawan', slug: 'laxmi-narsingha' },
-        { label: 'Ganesha', slug: 'ganesha' },
-        { label: 'Laxmi', slug: 'laxmi' },
-        { label: 'Saraswati', slug: 'saraswati' },
-        { label: 'Shiva', slug: 'shiva' },
-        { label: 'Narayan Bhagawan', slug: 'narayan-bhagawan' },
-        { label: 'Narayan Laxmi', slug: 'narayan-laxmi' },
-        { label: 'Brahma', slug: 'brahma' },
-        { label: 'Shiva Family', slug: 'shiva-family' },
-        { label: 'Cow Krishna', slug: 'cow-krishna' },
-        { label: 'Durga', slug: 'durga' },
-        { label: 'Hanuman', slug: 'hanuman' },
-        { label: 'Dattatreya', slug: 'dattatreya' },
-        { label: 'Varah Deva', slug: 'varah-deva' },
-        { label: 'Varah Devi', slug: 'varah-devi' },
-        { label: 'Ram Darbar', slug: 'ram-darbar' },
-        { label: 'Garudaji', slug: 'garudaji' },
-        { label: 'Vrindadevi', slug: 'vrindadevi' },
-        { label: 'Anna Purna', slug: 'anna-purna' },
-        { label: 'Kubera', slug: 'kubera' },
-      ]},
-      { id: 'puja-accessories', label: 'Puja Accessories', slug: 'puja-accessories', children: [
-        { label: 'Conch', slug: 'conch' },
-        { label: 'Conch Stand', slug: 'conch-stand' },
-        { label: 'Incense Stick Stand', slug: 'incense-stand' },
-        { label: 'Hand Bell-Ghanti', slug: 'hand-bell' },
-        { label: 'Puja Thali', slug: 'puja-thali' },
-        { label: 'Dhoop Burner', slug: 'dhoop-burner' },
-        { label: 'Oil Lamp', slug: 'oil-lamp' },
-        { label: 'Temple Bell', slug: 'temple-bell' },
-        { label: 'Dhoop Kone Stand', slug: 'dhoop-kone-stand' },
-        { label: 'Temples', slug: 'temples' },
-      ]},
-      { id: 'incense-fragrance', label: 'Incense & Fragrance', slug: 'incense-fragrance', children: [
-        { label: 'Dhoopa Kone', slug: 'dhoopa-kone' },
-        { label: 'Dhoopa Stick', slug: 'dhoopa-stick' },
-        { label: 'Incense Stick', slug: 'incense-stick' },
-        { label: 'Aroma Oils', slug: 'aroma-oils' },
-        { label: 'Itra', slug: 'itra' },
-        { label: 'Perfumes', slug: 'perfumes' },
-      ]},
+      {
+        id: 'god-idols', label: 'God Idols', slug: 'god-idols', children: [
+          { label: 'Radha Krishna', slug: 'radha-krishna' },
+          { label: 'Single Krishna', slug: 'single-krishna' },
+          { label: 'Narsingha Bhagawan', slug: 'narsingha-bhagawan' },
+          { label: 'Laxmi Narsingha Bhagawan', slug: 'laxmi-narsingha' },
+          { label: 'Ganesha', slug: 'ganesha' },
+          { label: 'Laxmi', slug: 'laxmi' },
+          { label: 'Saraswati', slug: 'saraswati' },
+          { label: 'Shiva', slug: 'shiva' },
+          { label: 'Narayan Bhagawan', slug: 'narayan-bhagawan' },
+          { label: 'Narayan Laxmi', slug: 'narayan-laxmi' },
+          { label: 'Brahma', slug: 'brahma' },
+          { label: 'Shiva Family', slug: 'shiva-family' },
+          { label: 'Cow Krishna', slug: 'cow-krishna' },
+          { label: 'Durga', slug: 'durga' },
+          { label: 'Hanuman', slug: 'hanuman' },
+          { label: 'Dattatreya', slug: 'dattatreya' },
+          { label: 'Varah Deva', slug: 'varah-deva' },
+          { label: 'Varah Devi', slug: 'varah-devi' },
+          { label: 'Ram Darbar', slug: 'ram-darbar' },
+          { label: 'Garudaji', slug: 'garudaji' },
+          { label: 'Vrindadevi', slug: 'vrindadevi' },
+          { label: 'Anna Purna', slug: 'anna-purna' },
+          { label: 'Kubera', slug: 'kubera' },
+          { label: 'Prabhupada', slug: 'prabhupada' },
+        ]
+      },
+      {
+        id: 'puja-accessories', label: 'Puja Accessories', slug: 'puja-accessories', children: [
+          { label: 'Conch', slug: 'conch' },
+          { label: 'Conch Stand', slug: 'conch-stand' },
+          { label: 'Incense Stick Stand', slug: 'incense-stand' },
+          { label: 'Hand Bell-Ghanti', slug: 'hand-bell' },
+          { label: 'Puja Thali', slug: 'puja-thali' },
+          { label: 'Dhoop Burner', slug: 'dhoop-burner' },
+          { label: 'Oil Lamp', slug: 'oil-lamp' },
+          { label: 'Temple Bell', slug: 'temple-bell' },
+          { label: 'Dhoop Kone Stand', slug: 'dhoop-kone-stand' },
+          { label: 'Temples', slug: 'temples' },
+        ]
+      },
+      {
+        id: 'incense-fragrance', label: 'Incense & Fragrance', slug: 'incense-fragrance', children: [
+          { label: 'Dhoopa Kone', slug: 'dhoopa-kone' },
+          { label: 'Dhoopa Stick', slug: 'dhoopa-stick' },
+          { label: 'Incense Stick', slug: 'incense-stick' },
+          { label: 'Aroma Oils', slug: 'aroma-oils' },
+          { label: 'Itra', slug: 'itra' },
+          { label: 'Perfumes', slug: 'perfumes' },
+        ]
+      },
     ],
   },
   {
     id: 'instruments', label: 'Musical Instruments', icon: '🥁', slug: 'instruments',
     children: [
-      { id: 'devotional-instruments', label: 'Instruments', slug: 'devotional-instruments', children: [
-        { label: 'Mridangams', slug: 'mridangams' },
-        { label: 'Kartal', slug: 'kartal' },
-        { label: 'Happy Drums', slug: 'happy-drums' },
-        { label: 'Singing Bowls', slug: 'singing-bowls' },
-        { label: 'Hand Pan', slug: 'hand-pan' },
-        { label: 'Pantham', slug: 'pantham' },
-        { label: 'Darbooka', slug: 'darbooka' },
-        { label: 'Whompers', slug: 'whompers' },
-      ]},
+      {
+        id: 'devotional-instruments', label: 'Instruments', slug: 'devotional-instruments', children: [
+          { label: 'Mridangams', slug: 'mridangams' },
+          { label: 'Kartal', slug: 'kartal' },
+          { label: 'Happy Drums', slug: 'happy-drums' },
+          { label: 'Singing Bowls', slug: 'singing-bowls' },
+          { label: 'Hand Pan', slug: 'hand-pan' },
+          { label: 'Pantham', slug: 'pantham' },
+          { label: 'Darbooka', slug: 'darbooka' },
+          { label: 'Whompers', slug: 'whompers' },
+        ]
+      },
     ],
   },
   {
     id: 'kid-toy', label: 'Kid Toy', icon: '🧸', slug: 'kid-toy',
     children: [
-      { id: 'kids-toys', label: 'Toys & Puzzles', slug: 'kids-toys', children: [
-        { label: 'Chase Game', slug: 'chase-game' },
-        { label: 'Wooden Puzzles', slug: 'wooden-puzzles' },
-        { label: 'Soft Krishna Dolls', slug: 'soft-krishna-dolls' },
-        { label: 'Soft Dolls', slug: 'soft-dolls' },
-      ]},
+      {
+        id: 'kids-toys', label: 'Toys & Puzzles', slug: 'kids-toys', children: [
+          { label: 'Chase Game', slug: 'chase-game' },
+          { label: 'Wooden Puzzles', slug: 'wooden-puzzles' },
+          { label: 'Soft Krishna Dolls', slug: 'soft-krishna-dolls' },
+          { label: 'Soft Dolls', slug: 'soft-dolls' },
+        ]
+      },
     ],
   },
   {
     id: 'yantras-crystals', label: 'Yantras & Crystals', icon: '🔮', slug: 'yantras-crystals',
     children: [
-      { id: 'yantras', label: 'Yantras', slug: 'yantras', children: [
-        { label: 'Shri Yantra', slug: 'shri-yantra' },
-        { label: 'Shani Yantra', slug: 'shani-yantra' },
-        { label: 'Nava Grah Yantra', slug: 'nava-grah-yantra' },
-        { label: 'Sarpa Dosh Yantra', slug: 'sarpa-dosh-yantra' },
-        { label: 'Laxmi Yantra', slug: 'laxmi-yantra' },
-      ]},
-      { id: 'crystal-bracelets-beads', label: 'Bracelets & Neck Beads', slug: 'crystal-bracelets-beads', children: [
-        { label: '7 Chakra Bracelet', slug: '7-chakra-bracelet' },
-        { label: 'Amazonite', slug: 'amazonite-bracelet' },
-        { label: 'Amethyst', slug: 'amethyst-bracelet' },
-        { label: 'Black Obsidian', slug: 'black-obsidian-bracelet' },
-        { label: 'Black Onyx', slug: 'black-onyx-bracelet' },
-        { label: 'Black Sulemani', slug: 'black-sulemani-bracelet' },
-        { label: 'Black Tourmaline', slug: 'black-tourmaline-bracelet' },
-        { label: 'Bloodstone', slug: 'bloodstone-bracelet' },
-        { label: 'Blue Tiger Eye', slug: 'blue-tiger-eye-bracelet' },
-        { label: 'Carnelian', slug: 'carnelian-bracelet' },
-        { label: 'Cat Eye', slug: 'cat-eye-bracelet' },
-        { label: 'Citrine', slug: 'citrine-bracelet' },
-        { label: 'Clear Quartz', slug: 'clear-quartz-bracelet' },
-        { label: 'Fluorite', slug: 'fluorite-bracelet' },
-        { label: 'Green Aventurine', slug: 'green-aventurine-bracelet' },
-        { label: 'Green Jade', slug: 'green-jade-bracelet' },
-        { label: 'Hematite', slug: 'hematite-bracelet' },
-        { label: 'Howlite', slug: 'howlite-bracelet' },
-        { label: 'Lapis Lazuli', slug: 'lapis-lazuli-bracelet' },
-        { label: 'Moonstone', slug: 'moonstone-bracelet' },
-        { label: 'Multi Fluorite', slug: 'multi-fluorite-bracelet' },
-        { label: 'Pearl', slug: 'pearl-bracelet' },
-        { label: 'Pyrite', slug: 'pyrite-bracelet' },
-        { label: 'Red Jasper', slug: 'red-jasper-bracelet' },
-        { label: 'Rose Quartz', slug: 'rose-quartz-bracelet' },
-        { label: 'Selenite', slug: 'selenite-bracelet' },
-        { label: 'Sodalite', slug: 'sodalite-bracelet' },
-        { label: 'Sunstone', slug: 'sunstone-bracelet' },
-        { label: 'Tiger Eye', slug: 'tiger-eye-bracelet' },
-        { label: 'Turquoise', slug: 'turquoise-bracelet' },
-      ]},
-      { id: 'raw-rough-stones', label: 'Raw Rough Stone', slug: 'raw-rough-stones', children: [
-        { label: 'Pyrite', slug: 'raw-pyrite' },
-        { label: 'Rose Quartz', slug: 'raw-rose-quartz' },
-      ]},
+      {
+        id: 'yantras', label: 'Yantras', slug: 'yantras', children: [
+          { label: 'Shri Yantra', slug: 'shri-yantra' },
+          { label: 'Shani Yantra', slug: 'shani-yantra' },
+          { label: 'Nava Grah Yantra', slug: 'nava-grah-yantra' },
+          { label: 'Sarpa Dosh Yantra', slug: 'sarpa-dosh-yantra' },
+          { label: 'Laxmi Yantra', slug: 'laxmi-yantra' },
+        ]
+      },
+      {
+        id: 'crystal-bracelets-beads', label: 'Bracelets & Neck Beads', slug: 'crystal-bracelets-beads', children: [
+          { label: '7 Chakra Bracelet', slug: '7-chakra-bracelet' },
+          { label: 'Amazonite', slug: 'amazonite-bracelet' },
+          { label: 'Amethyst', slug: 'amethyst-bracelet' },
+          { label: 'Black Obsidian', slug: 'black-obsidian-bracelet' },
+          { label: 'Black Onyx', slug: 'black-onyx-bracelet' },
+          { label: 'Black Sulemani', slug: 'black-sulemani-bracelet' },
+          { label: 'Black Tourmaline', slug: 'black-tourmaline-bracelet' },
+          { label: 'Bloodstone', slug: 'bloodstone-bracelet' },
+          { label: 'Blue Tiger Eye', slug: 'blue-tiger-eye-bracelet' },
+          { label: 'Carnelian', slug: 'carnelian-bracelet' },
+          { label: 'Cat Eye', slug: 'cat-eye-bracelet' },
+          { label: 'Citrine', slug: 'citrine-bracelet' },
+          { label: 'Clear Quartz', slug: 'clear-quartz-bracelet' },
+          { label: 'Fluorite', slug: 'fluorite-bracelet' },
+          { label: 'Green Aventurine', slug: 'green-aventurine-bracelet' },
+          { label: 'Green Jade', slug: 'green-jade-bracelet' },
+          { label: 'Hematite', slug: 'hematite-bracelet' },
+          { label: 'Howlite', slug: 'howlite-bracelet' },
+          { label: 'Lapis Lazuli', slug: 'lapis-lazuli-bracelet' },
+          { label: 'Moonstone', slug: 'moonstone-bracelet' },
+          { label: 'Multi Fluorite', slug: 'multi-fluorite-bracelet' },
+          { label: 'Pearl', slug: 'pearl-bracelet' },
+          { label: 'Pyrite', slug: 'pyrite-bracelet' },
+          { label: 'Red Jasper', slug: 'red-jasper-bracelet' },
+          { label: 'Rose Quartz', slug: 'rose-quartz-bracelet' },
+          { label: 'Selenite', slug: 'selenite-bracelet' },
+          { label: 'Sodalite', slug: 'sodalite-bracelet' },
+          { label: 'Sunstone', slug: 'sunstone-bracelet' },
+          { label: 'Tiger Eye', slug: 'tiger-eye-bracelet' },
+          { label: 'Turquoise', slug: 'turquoise-bracelet' },
+        ]
+      },
+      {
+        id: 'raw-rough-stones', label: 'Raw Rough Stone', slug: 'raw-rough-stones', children: [
+          { label: 'Pyrite', slug: 'raw-pyrite' },
+          { label: 'Rose Quartz', slug: 'raw-rose-quartz' },
+        ]
+      },
     ],
   },
 ] as const;
@@ -244,7 +279,7 @@ interface FormState {
 
 const initial = (): FormState => ({
   title: '', slug: '', sku: generateSKU(),
-  shortDescription: '', description: '', brand: '', productCollection: '',
+  shortDescription: '', description: '', brand: 'Radha Store Vrindavana', productCollection: '',
   category: '', subcategory: '', productType: '',
   material: '', style: '', occasion: '',
   mrp: '', discountPercentage: '35', sellingPrice: '', shippingCharge: '0', finalPrice: '',
@@ -253,7 +288,7 @@ const initial = (): FormState => ({
   colors: [], sizes: [], variants: [],
   keyFeatures: [], careInstructions: [],
   tags: [], seoTitle: '', seoDescription: '', searchKeywords: [],
-  dispatchTime: '', estimatedDelivery: '', returnAvailable: false,
+  dispatchTime: '1-2 Business Days', estimatedDelivery: '4-5 Business Days', returnAvailable: false,
   images: [],
   status: 'Draft',
 });
@@ -284,49 +319,105 @@ function Section({ title, children, defaultOpen = false, badge }: {
 
 // ─── Dynamic List Field ───────────────────────────────────────────────────────
 
-function ListField({ label, items, onChange, collection, placeholder }: {
+function ListField({ label, items, onChange, placeholder }: {
   label: string; items: string[]; onChange: (v: string[]) => void;
-  collection: string; placeholder?: string;
+  placeholder?: string;
 }) {
+  const [input, setInput] = useState('');
+
+  const handleAdd = () => {
+    if (!input.trim()) return;
+
+    // Split the input text into multiple items
+    const lines = input.split(/\r?\n/);
+    let newVals: string[] = [];
+
+    if (lines.length === 1 && input.includes('.')) {
+      const sentences = input
+        .split(/\.\s+/)
+        .map((s) => s.trim())
+        .map((s) => (s.endsWith('.') ? s.slice(0, -1) : s))
+        .filter(Boolean);
+      if (sentences.length > 1) {
+        newVals = sentences;
+      } else {
+        newVals = [input.trim()];
+      }
+    } else {
+      newVals = lines
+        .map((line) => {
+          let cleaned = line.trim();
+          // Remove bullets (e.g. 1. or - or * or •)
+          cleaned = cleaned.replace(/^(?:\d+\.\s*|[-*•]\s*)/, '');
+          return cleaned.trim();
+        })
+        .filter(Boolean);
+    }
+
+    const uniqueNew = newVals.filter((v) => !items.includes(v));
+    if (uniqueNew.length > 0) {
+      onChange([...items, ...uniqueNew]);
+    }
+    setInput('');
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleAdd();
+    }
+  };
+
   return (
     <div>
       <p className="text-sm font-medium text-gray-700 mb-2">{label}</p>
-      <div className="space-y-2">
+      <div className="space-y-3">
         {items.map((item, i) => (
           <div key={i} className="flex gap-2">
             <input
               value={item}
-              onChange={(e) => { const n = [...items]; n[i] = e.target.value; onChange(n); }}
+              onChange={(e) => {
+                const n = [...items];
+                n[i] = e.target.value;
+                onChange(n);
+              }}
               className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
               placeholder={placeholder}
             />
-            <button type="button" onClick={() => onChange(items.filter((_, j) => j !== i))}
-              className="p-2 text-gray-400 hover:text-red-500 transition-colors">
+            <button
+              type="button"
+              onClick={() => onChange(items.filter((_, j) => j !== i))}
+              className="p-2 text-gray-400 hover:text-red-500 transition-colors"
+            >
               <X size={14} />
             </button>
           </div>
         ))}
-        <div className="relative">
-          <CreatableSelect
-            collection={collection}
-            value=""
-            onChange={(v) => { if (v && !items.includes(v as string)) onChange([...items, v as string]); }}
-            placeholder={`Search or add ${label.toLowerCase()}...`}
+
+        <div className="space-y-1.5">
+          <textarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder={placeholder || `Paste bulk text or type and press Enter to add...`}
+            rows={2}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
           />
+          <div className="flex justify-between items-center px-1">
+            <span className="text-[11px] text-gray-400">
+              Pasting multiple lines or sentences will add them as individual items.
+            </span>
+            <button
+              type="button"
+              onClick={handleAdd}
+              disabled={!input.trim()}
+              className="flex items-center gap-1 text-xs px-2.5 py-1 bg-brand-50 text-brand-700 rounded-lg hover:bg-brand-100 disabled:opacity-50 transition-colors font-medium"
+            >
+              <Plus size={12} /> Add
+            </button>
+          </div>
         </div>
       </div>
-      {items.length > 0 && (
-        <div className="flex flex-wrap gap-1.5 mt-2">
-          {items.map((item) => (
-            <span key={item} className="inline-flex items-center gap-1 px-2 py-0.5 bg-gray-100 text-gray-700 rounded-md text-xs">
-              {item}
-              <button type="button" onClick={() => onChange(items.filter((v) => v !== item))}>
-                <X size={10} />
-              </button>
-            </span>
-          ))}
-        </div>
-      )}
     </div>
   );
 }
@@ -699,12 +790,12 @@ export function ProductForm({ initialData, mode = 'create' }: Props) {
 
       {/* ── 7. Key Features ── */}
       <Section title="Key Features">
-        <ListField label="Key Features" items={form.keyFeatures} onChange={(v) => set('keyFeatures', v)} collection="features" placeholder="e.g. Handcrafted in India" />
+        <ListField label="Key Features" items={form.keyFeatures} onChange={(v) => set('keyFeatures', v)} placeholder="e.g. Handcrafted in India" />
       </Section>
 
       {/* ── 8. Care Instructions ── */}
       <Section title="Care Instructions">
-        <ListField label="Care Instructions" items={form.careInstructions} onChange={(v) => set('careInstructions', v)} collection="careInstructions" placeholder="e.g. Clean with soft cloth" />
+        <ListField label="Care Instructions" items={form.careInstructions} onChange={(v) => set('careInstructions', v)} placeholder="e.g. Clean with soft cloth" />
       </Section>
 
       {/* ── 9. Shipping ── */}
